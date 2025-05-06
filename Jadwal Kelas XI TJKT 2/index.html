@@ -10,11 +10,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="lightmode.css">
+  <link rel="stylesheet" href="darkmode.css">
 </head>
 <body class="min-h-screen">
   <!-- Header Section -->
   <header class="gradient-bg text-white py-6 px-4">
-    <div class="container mx-auto">
+    <div class="container mx-auto relative">
+      <div class="absolute right-4 top-0">
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-white/10 transition-all">
+          <i class="fas fa-moon text-white text-xl"></i>
+        </button>
+      </div>
       <h1 class="text-2xl md:text-3xl font-light text-center">Jadwal Kelas Digital</h1>
       <h2 class="text-3xl md:text-4xl font-bold text-center mt-2">JADWAL KELAS XI TJKT 2</h2>
     </div>
@@ -123,7 +130,9 @@
   <footer class="bg-gray-50 py-6 mt-8">
     <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
       <p>© 2025 Jadwal Kelas Digital XI TJKT 2 | SMKN 7 Samarinda</p>
-      <p class="mt-1">Waktu saat ini mengikuti zona waktu WITA (UTC+8)</p>
+      <p class="mt-1">Waktu mengikuti WITA (UTC+8/GMT+8)</p>
+      <p class="mt-1">Zona Waktu: Asia/Makassar, Indonesia</p>
+      <p class="mt-1 text-xs">*Akurasi waktu bergantung pada sinkronisasi waktu perangkat Anda</p>
     </div>
   </footer>
 

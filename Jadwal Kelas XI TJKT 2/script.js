@@ -1,3 +1,30 @@
+// Theme management
+const themeToggleBtn = document.getElementById('theme-toggle');
+const themeIcon = themeToggleBtn.querySelector('i');
+
+// Load saved theme preference
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.body.classList.toggle('dark', savedTheme === 'dark');
+  updateThemeIcon(savedTheme === 'dark');
+}
+
+// Update theme icon
+function updateThemeIcon(isDark) {
+  themeIcon.classList.remove('fa-sun', 'fa-moon');
+  themeIcon.classList.add(isDark ? 'fa-sun' : 'fa-moon');
+}
+
+// Toggle theme
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  updateThemeIcon(isDark);
+}
+
+// Add theme toggle event listener
+themeToggleBtn.addEventListener('click', toggleTheme);
+
 // Schedule data (WITA timezone)
 const scheduleData = {
   monday: [
@@ -38,7 +65,7 @@ const scheduleData = {
     { subject: "PJOK", teacher: "Mia Normasari", start: "08:35", end: "09:55" },
     { subject: "ISTIRAHAT 1", teacher: "", start: "09:55", end: "10:25" },
     { subject: "Pendidikan Pancasila", teacher: "Juanda", start: "10:25", end: "11:45" },
-    { subject: "ISLAM SHOLAT JUMAT DAN BERAGAMA KRISTEN/KATHOLIK/BUDDHA/HINDU/KHOGCHU MENGIKUTI PELAJARAN AGAMA DAN BUDI PEKERTI", teacher: "", start: "11:45", end: "13:25" },
+    { subject: "WAKTU IBADAH (Sholat Jumat/Ibadah Keagamaan)", teacher: "", start: "11:45", end: "13:25" },
     { subject: "Sejarah", teacher: "Yekti Bambang Priono", start: "13:25", end: "14:50" }
   ]
 };
@@ -158,7 +185,13 @@ function updateClassInfo() {
     const timeLeftMinutes = Math.max(0, Math.floor(timeLeftMs / (1000 * 60)));
     
     if (timeLeftMinutes > 0) {
-      timeLeftEl.textContent = `${timeLeftMinutes} menit`;
+      if (timeLeftMinutes > 60) {
+        const hours = Math.floor(timeLeftMinutes / 60);
+        const minutes = timeLeftMinutes % 60;
+        timeLeftEl.textContent = `${hours} jam ${minutes} menit`;
+      } else {
+        timeLeftEl.textContent = `${timeLeftMinutes} menit`;
+      }
       const totalDurationMs = current.endTime - current.startTime;
       const elapsedMs = now - current.startTime;
       const progressPercent = Math.min(100, Math.max(0, (elapsedMs / totalDurationMs) * 100));
@@ -272,6 +305,7 @@ function initDayButtons() {
 
 // Inisialisasi aplikasi
 function init() {
+  loadTheme();
   updateClassInfo();
   setInterval(updateClassInfo, 1000);
   initDayButtons();
