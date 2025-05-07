@@ -45,7 +45,7 @@ const scheduleData = {
     { subject: "Keamanan Jaringan", teacher: "M.Nurfajri", start: "13:25", end: "15:30" }
   ],
   wednesday: [
-    { subject: "Pemasangan KonfigurasiJar", teacher: "M. Azar Al Fitrah", start: "07:15", end: "09:55" },
+    { subject: "Pemasangan Konfigurasi Jaringan", teacher: "M. Azar Al Fitrah", start: "07:15", end: "09:55" },
     { subject: "ISTIRAHAT 1", teacher: "", start: "09:55", end: "10:25" },
     { subject: "Administrasi Sistem Jaringan", teacher: "Robiansyah", start: "10:25", end: "12:25" },
     { subject: "ISTIRAHAT II DAN SHOLAT DZUHUR", teacher: "", start: "12:25", end: "13:25" },
