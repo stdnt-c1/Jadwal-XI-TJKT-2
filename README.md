@@ -66,5 +66,96 @@ A modern, responsive web application for managing and viewing the class schedule
 - Update schedule data and uniform schedule directly in `script.js`.
 - Adjust styles in `lightmode.css` and `darkmode.css` as needed.
 
+## Deployment Guide
+
+### Prerequisites
+1. A GitHub account
+2. A Vercel account
+3. A MongoDB Atlas account
+
+### Setting Up MongoDB Atlas
+1. Create a new cluster in MongoDB Atlas
+2. Create a database user with read/write permissions
+3. Get your MongoDB connection string
+4. Replace the password placeholder with your actual database user password
+5. Whitelist all IP addresses (0.0.0.0/0) for development
+
+### Deployment Steps
+
+1. **Push to GitHub:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin <your-github-repo-url>
+   git push -u origin main
+   ```
+
+2. **Configure GitHub Repository Secrets:**
+   - Go to your GitHub repository
+   - Navigate to Settings > Secrets and variables > Actions
+   - Add the following secret:
+     - Name: `MONGODB_URI`
+     - Value: Your MongoDB Atlas connection string
+
+3. **Connect to Vercel:**
+   - Log in to Vercel and import your GitHub repository
+   - Go to Project Settings > Environment Variables
+   - Add the following variables:
+     - `MONGODB_URI`: Use the same MongoDB connection string
+
+4. **Update API_BASE_URL:**
+   - After deployment, get your Vercel deployment URL
+   - Update `API_BASE_URL` in `script.js` with your Vercel URL
+   - Commit and push the changes:
+     ```bash
+     git add Jadwal\ Kelas\ XI\ TJKT\ 2/script.js
+     git commit -m "Update API_BASE_URL"
+     git push
+     ```
+
+5. **Verify Deployment:**
+   - Check Vercel deployment logs
+   - Test the application
+   - Verify MongoDB connection
+   - Test assignment CRUD operations
+
+### Security Notes
+- Never commit sensitive information like database credentials
+- Always use environment variables for secrets
+- Keep your GitHub repository secrets secure
+- Regularly rotate database passwords
+- Monitor your MongoDB Atlas access logs
+
+### Local Development
+1. Create a local `.env` file (it will be ignored by git):
+   ```
+   MONGODB_URI=your_mongodb_connection_string
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the server:
+   ```bash
+   npm run dev
+   ```
+
+### Updating Secrets
+1. **GitHub:**
+   - Go to repository Settings > Secrets and variables > Actions
+   - Update the existing secrets as needed
+
+2. **Vercel:**
+   - Go to Project Settings > Environment Variables
+   - Edit or add new environment variables as needed
+
+### Troubleshooting
+- Check Vercel deployment logs for errors
+- Verify MongoDB connection string is correct
+- Ensure all required environment variables are set
+- Check CORS configuration if API requests fail
+
 ## License
 MIT

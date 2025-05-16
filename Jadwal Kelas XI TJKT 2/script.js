@@ -304,90 +304,64 @@ function initDayButtons() {
   dayButtons[currentDayIndex].click();
 }
 
-// Assignments Database Setup
-let db;
-const DB_NAME = 'AssignmentsDB';
-const STORE_NAME = 'assignments';
-
-const initDB = () => {
-    const request = indexedDB.open(DB_NAME, 1);
-
-    request.onerror = (event) => {
-        console.error('Database error:', event.target.error);
-    };
-
-    request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-        
-        store.createIndex('subject', 'subject', { unique: false });
-        store.createIndex('dueDate', 'dueDate', { unique: false });
-        store.createIndex('status', 'status', { unique: false });
-    };
-
-    request.onsuccess = (event) => {
-        db = event.target.result;
-        loadAssignments();
-    };
-};
+// API configuration
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://your-vercel-deployment-url' // Replace with your Vercel deployment URL
+  : 'http://localhost:3000';
 
 // Assignment CRUD Operations
-const addAssignment = (assignment) => {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        
-        // Set default values
-        assignment.createdAt = assignment.createdAt || new Date().toISOString();
-        assignment.status = 'active';
-        if (!assignment.dueDate) {
-            const defaultDue = new Date();
-            defaultDue.setDate(defaultDue.getDate() + 30);
-            assignment.dueDate = defaultDue.toISOString().split('T')[0];
-        }
-
-        const request = store.add(assignment);
-        
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
+const addAssignment = async (assignment) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/assignments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(assignment),
     });
+    if (!response.ok) throw new Error('Failed to add assignment');
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 };
 
-const getAssignments = () => {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readonly');
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.getAll();
-        
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
+const getAssignments = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/assignments`);
+    if (!response.ok) throw new Error('Failed to fetch assignments');
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 };
 
-const updateAssignment = (id, updates) => {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        
-        const request = store.get(id);
-        request.onsuccess = () => {
-            const assignment = { ...request.result, ...updates };
-            store.put(assignment);
-            resolve();
-        };
-        request.onerror = () => reject(request.error);
+const updateAssignment = async (id, updates) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/assignments/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updates),
     });
+    if (!response.ok) throw new Error('Failed to update assignment');
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 };
 
-const deleteAssignment = (id) => {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        
-        const request = store.delete(id);
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
+const deleteAssignment = async (id) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/assignments/${id}`, {
+      method: 'DELETE',
     });
+    if (!response.ok) throw new Error('Failed to delete assignment');
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 };
 
 // UI Functions
@@ -407,7 +381,7 @@ const loadAssignments = async () => {
             const isPast = dueDate < now;
             
             if (isPast && assignment.status === 'active') {
-                updateAssignment(assignment.id, { status: 'past' });
+                updateAssignment(assignment._id, { status: 'past' }); // Note: using _id for MongoDB
                 assignment.status = 'past';
             }
             
@@ -438,7 +412,7 @@ const loadAssignments = async () => {
             };
 
             row.innerHTML = `
-                <td class="py-3 px-4">${assignment.id}</td>
+                <td class="py-3 px-4">${assignment._id}</td>
                 <td class="py-3 px-4">${assignment.subject}</td>
                 <td class="py-3 px-4">${assignment.details}</td>
                 <td class="py-3 px-4">${formatDate(assignment.createdAt)}</td>
@@ -449,10 +423,10 @@ const loadAssignments = async () => {
                     </span>
                 </td>
                 <td class="py-3 px-4">
-                    <button onclick="editAssignment(${assignment.id})" class="${buttonClasses.edit} mr-2">
+                    <button onclick="editAssignment('${assignment._id}')" class="${buttonClasses.edit} mr-2">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button onclick="confirmDelete(${assignment.id})" class="${buttonClasses.delete}">
+                    <button onclick="confirmDelete('${assignment._id}')" class="${buttonClasses.delete}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -461,6 +435,7 @@ const loadAssignments = async () => {
         });
     } catch (error) {
         console.error('Error loading assignments:', error);
+        showNotification('Gagal memuat tugas', 'error');
     }
 };
 
@@ -579,16 +554,18 @@ const confirmDelete = (id) => {
 };
 
 const editAssignment = async (id) => {
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.get(id);
+    try {
+        const assignments = await getAssignments();
+        const assignment = assignments.find(a => a._id === id);
+        if (!assignment) {
+            showNotification('Tugas tidak ditemukan', 'error');
+            return;
+        }
 
-    request.onsuccess = () => {
-        const assignment = request.result;
         document.getElementById('assignment-subject').value = assignment.subject;
         document.getElementById('assignment-details').value = assignment.details;
         document.getElementById('assignment-assigned-date').value = assignment.createdAt.split('T')[0];
-        document.getElementById('assignment-due-date').value = assignment.dueDate;
+        document.getElementById('assignment-due-date').value = assignment.dueDate.split('T')[0];
         
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -606,13 +583,18 @@ const editAssignment = async (id) => {
                 await updateAssignment(id, updates);
                 modal.classList.remove('flex');
                 modal.classList.add('hidden');
-                loadAssignments();
+                await loadAssignments();
+                showNotification('Tugas berhasil diperbarui', 'success');
                 form.onsubmit = null; // Reset form handler
             } catch (error) {
                 console.error('Error updating assignment:', error);
+                showNotification('Gagal memperbarui tugas', 'error');
             }
         };
-    };
+    } catch (error) {
+        console.error('Error fetching assignment:', error);
+        showNotification('Gagal memuat tugas', 'error');
+    }
 };
 
 // Helper function to format dates
@@ -632,7 +614,7 @@ function init() {
   updateClassInfo();
   setInterval(updateClassInfo, 1000);
   initDayButtons();
-  initDB();
+  loadAssignments(); // Load assignments from the server
 }
 
 document.addEventListener('DOMContentLoaded', init);
