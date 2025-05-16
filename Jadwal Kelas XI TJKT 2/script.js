@@ -20,6 +20,7 @@ function toggleTheme() {
   const isDark = document.body.classList.toggle('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
   updateThemeIcon(isDark);
+  loadAssignments(); // Reload assignments to update their appearance
 }
 
 // Add theme toggle event listener
@@ -45,7 +46,7 @@ const scheduleData = {
     { subject: "Keamanan Jaringan", teacher: "M.Nurfajri", start: "13:25", end: "15:30" }
   ],
   wednesday: [
-    { subject: "Pemasangan Konfigurasi Jaringan", teacher: "M. Azar Al Fitrah", start: "07:15", end: "09:55" },
+    { subject: "Pemasangan KonfigurasiJar", teacher: "M. Azar Al Fitrah", start: "07:15", end: "09:55" },
     { subject: "ISTIRAHAT 1", teacher: "", start: "09:55", end: "10:25" },
     { subject: "Administrasi Sistem Jaringan", teacher: "Robiansyah", start: "10:25", end: "12:25" },
     { subject: "ISTIRAHAT II DAN SHOLAT DZUHUR", teacher: "", start: "12:25", end: "13:25" },
@@ -303,12 +304,335 @@ function initDayButtons() {
   dayButtons[currentDayIndex].click();
 }
 
+// Assignments Database Setup
+let db;
+const DB_NAME = 'AssignmentsDB';
+const STORE_NAME = 'assignments';
+
+const initDB = () => {
+    const request = indexedDB.open(DB_NAME, 1);
+
+    request.onerror = (event) => {
+        console.error('Database error:', event.target.error);
+    };
+
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        
+        store.createIndex('subject', 'subject', { unique: false });
+        store.createIndex('dueDate', 'dueDate', { unique: false });
+        store.createIndex('status', 'status', { unique: false });
+    };
+
+    request.onsuccess = (event) => {
+        db = event.target.result;
+        loadAssignments();
+    };
+};
+
+// Assignment CRUD Operations
+const addAssignment = (assignment) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        
+        // Set default values
+        assignment.createdAt = assignment.createdAt || new Date().toISOString();
+        assignment.status = 'active';
+        if (!assignment.dueDate) {
+            const defaultDue = new Date();
+            defaultDue.setDate(defaultDue.getDate() + 30);
+            assignment.dueDate = defaultDue.toISOString().split('T')[0];
+        }
+
+        const request = store.add(assignment);
+        
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+};
+
+const getAssignments = () => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
+        
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+};
+
+const updateAssignment = (id, updates) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        
+        const request = store.get(id);
+        request.onsuccess = () => {
+            const assignment = { ...request.result, ...updates };
+            store.put(assignment);
+            resolve();
+        };
+        request.onerror = () => reject(request.error);
+    });
+};
+
+const deleteAssignment = (id) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        
+        const request = store.delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+};
+
+// UI Functions
+const loadAssignments = async () => {
+    try {
+        const assignments = await getAssignments();
+        const tbody = document.getElementById('assignments-table-body');
+        tbody.innerHTML = '';
+        const isDarkMode = document.body.classList.contains('dark');
+
+        assignments.sort((a, b) => {
+            if (a.status !== b.status) return a.status === 'active' ? -1 : 1;
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        }).forEach(assignment => {
+            const now = new Date();
+            const dueDate = new Date(assignment.dueDate);
+            const isPast = dueDate < now;
+            
+            if (isPast && assignment.status === 'active') {
+                updateAssignment(assignment.id, { status: 'past' });
+                assignment.status = 'past';
+            }
+            
+            const row = document.createElement('tr');
+            // Base classes that apply to both themes
+            let rowClass = 'border-b transition-colors duration-200 ';
+            
+            // Add theme-specific classes
+            if (isDarkMode) {
+                rowClass += assignment.status === 'past' 
+                    ? 'border-gray-700 bg-gray-700/50 text-gray-400'
+                    : 'border-gray-700 text-gray-200';
+            } else {
+                rowClass += assignment.status === 'past'
+                    ? 'border-gray-200 bg-gray-100 text-gray-500'
+                    : 'border-gray-200 text-gray-700';
+            }
+            
+            row.className = rowClass;
+            
+            const statusClass = assignment.status === 'active'
+                ? (isDarkMode ? 'bg-green-900/30 text-green-300' : 'bg-green-100 text-green-800')
+                : (isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800');
+                
+            const buttonClasses = {
+                edit: isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800',
+                delete: isDarkMode ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-800'
+            };
+
+            row.innerHTML = `
+                <td class="py-3 px-4">${assignment.id}</td>
+                <td class="py-3 px-4">${assignment.subject}</td>
+                <td class="py-3 px-4">${assignment.details}</td>
+                <td class="py-3 px-4">${formatDate(assignment.createdAt)}</td>
+                <td class="py-3 px-4">${formatDate(assignment.dueDate)}</td>
+                <td class="py-3 px-4">
+                    <span class="px-2 py-1 rounded-full text-xs ${statusClass}">
+                        ${assignment.status === 'active' ? 'Aktif' : 'Selesai'}
+                    </span>
+                </td>
+                <td class="py-3 px-4">
+                    <button onclick="editAssignment(${assignment.id})" class="${buttonClasses.edit} mr-2">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="confirmDelete(${assignment.id})" class="${buttonClasses.delete}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error loading assignments:', error);
+    }
+};
+
+// Custom Notification System
+const showNotification = (message, type = 'info') => {
+    const container = document.getElementById('notification-container');
+    const notification = document.createElement('div');
+    
+    const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500',
+        warning: 'bg-yellow-500'
+    };
+
+    notification.className = `${colors[type]} text-white px-4 py-2 rounded-lg shadow-lg mb-2 flex items-center opacity-0 transform translate-x-[-100%] transition-all duration-300`;
+    
+    const icon = document.createElement('i');
+    icon.className = `fas fa-${type === 'success' ? 'check-circle' : 
+                        type === 'error' ? 'exclamation-circle' : 
+                        type === 'warning' ? 'exclamation-triangle' : 
+                        'info-circle'} mr-2`;
+    
+    const text = document.createElement('span');
+    text.textContent = message;
+    
+    notification.appendChild(icon);
+    notification.appendChild(text);
+    container.appendChild(notification);
+
+    // Trigger animation
+    setTimeout(() => {
+        notification.classList.remove('opacity-0', 'translate-x-[-100%]');
+    }, 50);
+
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('opacity-0', 'translate-x-[-100%]');
+        setTimeout(() => {
+            container.removeChild(notification);
+        }, 300);
+    }, 3000);
+
+    return notification;
+};
+
+// Modal handling
+const modal = document.getElementById('assignment-modal');
+const form = document.getElementById('assignment-form');
+const addButton = document.getElementById('add-assignment');
+const cancelButton = document.getElementById('cancel-assignment');
+
+addButton.addEventListener('click', () => {
+    form.reset();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+});
+
+cancelButton.addEventListener('click', () => {
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+});
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const assignment = {
+        subject: document.getElementById('assignment-subject').value,
+        details: document.getElementById('assignment-details').value,
+        createdAt: document.getElementById('assignment-assigned-date').value || new Date().toISOString().split('T')[0],
+        dueDate: document.getElementById('assignment-due-date').value
+    };
+
+    try {
+        await addAssignment(assignment);
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        loadAssignments();
+        showNotification('Tugas berhasil ditambahkan', 'success');
+    } catch (error) {
+        showNotification('Gagal menambahkan tugas', 'error');
+        console.error('Error adding assignment:', error);
+    }
+});
+
+const confirmDelete = (id) => {
+    // Remove any existing confirmation buttons and warning notifications
+    const existingNotifications = document.querySelectorAll('.notification.warning');
+    existingNotifications.forEach(notification => notification.remove());
+
+    const notification = showNotification('Tekan hapus sekali lagi untuk menghapus tugas', 'warning');
+    notification.classList.add('warning'); // Add warning class for proper cleanup
+
+    // Store a flag in the button to prevent multiple clicks
+    let isDeleting = false;
+    
+    const confirmButton = document.createElement('button');
+    confirmButton.className = 'ml-2 px-2 py-1 bg-white/20 rounded hover:bg-white/30 transition-colors';
+    confirmButton.textContent = 'Hapus';
+    confirmButton.onclick = async () => {
+        if (isDeleting) return; // Prevent multiple clicks
+        isDeleting = true;
+        
+        try {
+            await deleteAssignment(id);
+            notification.remove();
+            await loadAssignments();
+            showNotification('Tugas berhasil dihapus', 'success');
+        } catch (error) {
+            showNotification('Gagal menghapus tugas', 'error');
+            console.error('Error deleting assignment:', error);
+            isDeleting = false; // Reset flag if deletion fails
+        }
+    };
+    notification.appendChild(confirmButton);
+};
+
+const editAssignment = async (id) => {
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.get(id);
+
+    request.onsuccess = () => {
+        const assignment = request.result;
+        document.getElementById('assignment-subject').value = assignment.subject;
+        document.getElementById('assignment-details').value = assignment.details;
+        document.getElementById('assignment-assigned-date').value = assignment.createdAt.split('T')[0];
+        document.getElementById('assignment-due-date').value = assignment.dueDate;
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const updates = {
+                subject: document.getElementById('assignment-subject').value,
+                details: document.getElementById('assignment-details').value,
+                createdAt: document.getElementById('assignment-assigned-date').value,
+                dueDate: document.getElementById('assignment-due-date').value
+            };
+            
+            try {
+                await updateAssignment(id, updates);
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                loadAssignments();
+                form.onsubmit = null; // Reset form handler
+            } catch (error) {
+                console.error('Error updating assignment:', error);
+            }
+        };
+    };
+};
+
+// Helper function to format dates
+const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+};
+
 // Inisialisasi aplikasi
 function init() {
   loadTheme();
   updateClassInfo();
   setInterval(updateClassInfo, 1000);
   initDayButtons();
+  initDB();
 }
 
 document.addEventListener('DOMContentLoaded', init);
