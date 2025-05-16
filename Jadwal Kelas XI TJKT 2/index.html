@@ -13,17 +13,18 @@
   <link rel="stylesheet" href="lightmode.css">
   <link rel="stylesheet" href="darkmode.css">
 </head>
-<body class="min-h-screen">
-  <!-- Header Section -->
+<body class="min-h-screen">  <!-- Header Section -->
   <header class="gradient-bg text-white py-6 px-4">
-    <div class="container mx-auto relative">
-      <div class="flex flex-col">
-        <div class="self-end mb-4">
-          <button id="theme-toggle" class="p-3 rounded-lg hover:bg-white/20 transition-all border border-white/30">
-            <i class="fas fa-moon text-white text-xl"></i>
-          </button>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-bold text-center">JADWAL KELAS XI TJKT 2</h2>
+    <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between relative">
+      <div class="order-2 sm:order-1 w-full sm:w-auto flex-1 flex justify-center sm:justify-center">
+        <h1 class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-center px-4 pt-6 sm:pt-0 text-white transition-all duration-200">
+          JADWAL KELAS XI TJKT 2
+        </h1>
+      </div>
+      <div class="order-1 sm:order-2 w-full sm:w-auto flex justify-end absolute sm:static top-0 right-0 mt-2 sm:mt-0">
+        <button id="theme-toggle" class="p-3 sm:p-2 rounded-full hover:bg-white/10 transition-all">
+          <i class="fas fa-moon text-white text-xl"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -99,7 +100,93 @@
           </div>
         </div>
       </div>
+    </div>    <!-- Assignments Section -->
+    <div class="mb-12"> <!-- Increased from mb-8 to mb-12 for more space -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+          <i class="fas fa-book mr-2 text-yellow-600"></i> Tugas
+        </h3>
+        <button id="add-assignment" class="inline-flex items-center px-3 py-1.5 text-sm bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors shadow-sm hover:shadow-yellow-500/25">
+          <i class="fas fa-plus mr-1.5"></i>Tambah Tugas
+        </button>
+      </div>
+      <!-- Assignment Form Modal -->
+      <div id="assignment-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center">
+        <div class="bg-white rounded-xl p-6 max-w-lg w-full mx-4 shadow-xl">
+          <h4 class="text-xl font-semibold mb-4 text-gray-800">Tambah Tugas Baru</h4>
+          <form id="assignment-form" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Mata Pelajaran*</label>
+              <input type="text" id="assignment-subject" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Detail Tugas*</label>
+              <textarea id="assignment-details" required rows="3" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Diberikan</label>
+                <input type="date" id="assignment-assigned-date" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Batas Waktu</label>
+                <input type="date" id="assignment-due-date" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900">
+              </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+              <button type="button" id="cancel-assignment" class="px-4 py-2 border rounded-lg hover:bg-gray-50 text-gray-700">Batal</button>
+              <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Assignments Table -->
+      <div class="bg-white rounded-xl p-4 sm:p-6 overflow-x-auto shadow-lg shadow-gray-200/50 transition-all duration-200">
+        <div class="overflow-x-auto -mx-4 sm:mx-0">
+          <table class="min-w-full divide-y divide-gray-200 transition-colors duration-200">
+            <thead>
+              <tr>
+                <th class="text-left py-3 px-4 text-gray-600 text-sm">#</th>
+                <th class="text-left py-3 px-4 text-gray-600">Mata Pelajaran</th>
+                <th class="text-left py-3 px-4 text-gray-600">Detail</th>
+                <th class="text-left py-3 px-4 text-gray-600">Tgl. Diberikan</th>
+                <th class="text-left py-3 px-4 text-gray-600">Batas Waktu</th>
+                <th class="text-left py-3 px-4 text-gray-600">Status</th>
+                <th class="text-left py-3 px-4 text-gray-600">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="assignments-table-body">
+              <!-- Assignments will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+    <script>
+      // Dynamic input/textarea color for dark mode
+      function updateAssignmentInputColors() {
+        const isDark = document.body.classList.contains('dark');
+        const subject = document.getElementById('assignment-subject');
+        const details = document.getElementById('assignment-details');
+        const assigned = document.getElementById('assignment-assigned-date');
+        const due = document.getElementById('assignment-due-date');
+        [subject, details, assigned, due].forEach(el => {
+          if (!el) return;
+          el.style.color = isDark ? '#f3f4f6' : '#111827'; // Tailwind's gray-100 or gray-900
+          el.style.backgroundColor = isDark ? '#374151' : '#fff'; // gray-700 or white
+          el.style.caretColor = isDark ? '#facc15' : '#f59e42'; // yellow-400 or yellow-500
+        });
+      }
+      document.getElementById('theme-toggle').addEventListener('click', function() {
+        setTimeout(updateAssignmentInputColors, 100);
+      });
+      document.getElementById('add-assignment').addEventListener('click', function() {
+        setTimeout(updateAssignmentInputColors, 100);
+      });
+      document.addEventListener('DOMContentLoaded', function() {
+        updateAssignmentInputColors();
+      });
+    </script>
 
     <!-- Weekly Schedule Section -->
     <div>
@@ -125,6 +212,52 @@
         </div>
       </div>
     </div>
+
+    <!-- Uniform Schedule Section -->
+    <div class="container mx-auto px-4 pb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="fas fa-tshirt mr-2 text-purple-600"></i> Jadwal Seragam
+      </h3>
+      <div class="bg-white rounded-xl p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-4 rounded-lg bg-gray-50">
+            <div class="flex items-center">
+              <span class="text-lg font-semibold text-gray-800">Senin</span>
+              <div class="h-px flex-1 mx-3 bg-gray-200"></div>
+            </div>
+            <p class="mt-2 text-gray-600">Seragam Putih &ndash; Abu-abu, Almamater</p>
+          </div>
+          <div class="p-4 rounded-lg bg-gray-50">
+            <div class="flex items-center">
+              <span class="text-lg font-semibold text-gray-800">Selasa</span>
+              <div class="h-px flex-1 mx-3 bg-gray-200"></div>
+            </div>
+            <p class="mt-2 text-gray-600">Seragam Icon (Kemeja Hitam, Celana Cream)</p>
+          </div>
+          <div class="p-4 rounded-lg bg-gray-50">
+            <div class="flex items-center">
+              <span class="text-lg font-semibold text-gray-800">Rabu</span>
+              <div class="h-px flex-1 mx-3 bg-gray-200"></div>
+            </div>
+            <p class="mt-2 text-gray-600">Seragam Jurusan (Kemeja Biru, Celana Hitam)</p>
+          </div>
+          <div class="p-4 rounded-lg bg-gray-50">
+            <div class="flex items-center">
+              <span class="text-lg font-semibold text-gray-800">Kamis</span>
+              <div class="h-px flex-1 mx-3 bg-gray-200"></div>
+            </div>
+            <p class="mt-2 text-gray-600">Seragam Batik (Kemaja Batik-Hitam, Celana Putih)</p>
+          </div>
+          <div class="p-4 rounded-lg bg-gray-50">
+            <div class="flex items-center">
+              <span class="text-lg font-semibold text-gray-800">Jum'at</span>
+              <div class="h-px flex-1 mx-3 bg-gray-200"></div>
+            </div>
+            <p class="mt-2 text-gray-600">Seragam Pramuka</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Footer Section -->
@@ -136,6 +269,9 @@
       <p class="mt-1 text-xs">*Akurasi waktu bergantung pada sinkronisasi waktu perangkat Anda</p>
     </div>
   </footer>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="fixed bottom-4 left-4 z-50"></div>
 
   <!-- Custom Script -->
   <script src="script.js"></script>

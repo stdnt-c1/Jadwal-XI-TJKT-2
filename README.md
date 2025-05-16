@@ -1,80 +1,70 @@
 # Jadwal Kelas XI TJKT 2
 
-A dynamic and responsive class schedule web application for Class XI TJKT 2 at SMKN 7 Samarinda. The application provides real-time schedule tracking with an intuitive interface that adapts to both desktop and mobile devices.
+A modern, responsive web application for managing and viewing the class schedule and assignments for SMKN 7 Samarinda, XI TJKT 2.
 
 ## Features
 
-- **Real-time Schedule Tracking**
-  - Current time display in WITA (UTC+8/GMT+8) timezone
-  - Active class indicator with remaining time
-  - Next class preview with countdown
-  - Visual progress bar for current class duration
+### 1. Class Schedule
+- **Current Class & Next Class:**
+  - Displays the current and next class, including subject, teacher, time range, and time left.
+  - Progress bar for the current class.
+- **Weekly Schedule:**
+  - View the full weekly schedule with day navigation.
+  - Responsive and visually clear layout.
+- **Uniform Schedule:**
+  - Shows the uniform schedule for each day.
 
-- **Weekly Schedule View**
-  - Interactive day selection
-  - Detailed class information including:
-    - Subject name
-    - Teacher
-    - Time slots
-    - Break periods
+### 2. Assignments Section
+- **CRUD Functionality:**
+  - Add, edit, and delete assignments with subject, details, assigned date, and due date.
+  - Assignments are persisted using IndexedDB (works offline).
+- **Status Tracking:**
+  - Assignments automatically update status to "Selesai" when past due.
+- **Responsive Table:**
+  - Assignments are displayed in a responsive, styled table.
+- **Modal Form:**
+  - Add/edit assignments via a modal form with validation.
+- **Custom Notifications:**
+  - User feedback for all actions (add, edit, delete, errors).
 
-- **Responsive Design**
-  - Adapts seamlessly to desktop and mobile devices
-  - Fluid typography that scales with viewport
-  - Mobile-optimized layout for schedule items
+### 3. Theme Support
+- **Light & Dark Mode:**
+  - Toggle between light and dark themes using the button in the header.
+  - Theme preference is saved and persists across sessions.
+  - All sections, including assignments and modals, update instantly and smoothly.
+- **Dynamic Input Colors:**
+  - Assignment form fields automatically adjust text and background color for visibility in both themes.
 
-- **Theme Support**
-  - Light and dark mode themes
-  - Smooth theme transitions
-  - Theme preference persistence
-  - Animated theme switching
+### 4. Responsive & Accessible Design
+- **Mobile Friendly:**
+  - Layout adapts for all screen sizes.
+  - Header, title, and theme toggle button are always accessible and well-spaced.
+- **Accessible:**
+  - Proper color contrast and focus states.
 
-- **Visual Enhancements**
-  - Smooth animations for schedule changes
-  - Interactive hover effects
-  - Progress bar with shimmer effect
-  - Glow effects in dark mode
+### 5. Animations & Transitions
+- **Smooth Transitions:**
+  - Theme changes and section transitions are animated for a modern feel.
+- **Notification Animations:**
+  - Custom notifications slide in and out.
 
-## Usage
-
-1. **Current Time Display**
-   - Shows the current time in WITA timezone
-   - Displays current date with day name
-
-2. **Current Class Section**
-   - Shows ongoing class details
-   - Displays remaining time
-   - Progress bar indicates elapsed time
-   - Teacher name and time slot information
-
-3. **Next Class Section**
-   - Preview of upcoming class
-   - Countdown to class start
-   - Teacher and time slot information
-
-4. **Weekly Schedule**
-   - Click day buttons to view different days
-   - Current day is automatically selected
-   - Break periods are clearly marked
-   - Active classes are highlighted
-
-5. **Theme Toggle**
-   - Click the sun/moon icon to switch themes
-   - Theme preference is saved between sessions
+## How to Use
+1. **Open `index.html` in your browser.**
+2. **Toggle theme** using the button in the top right.
+3. **View current and next class** at the top.
+4. **Navigate the weekly schedule** using the day buttons.
+5. **Manage assignments** in the "Tugas" section:
+   - Add new assignments with the yellow button.
+   - Edit or delete assignments using the action buttons in the table.
 
 ## Technical Details
+- **Frontend:** HTML, Tailwind CSS, Font Awesome, custom CSS for light/dark mode.
+- **Persistence:** IndexedDB for assignments (offline support).
+- **No backend required.**
 
-- Time Zone: WITA (UTC+8/GMT+8)
-- Region: Asia/Makassar, Indonesia
-- Frameworks:
-  - Tailwind CSS for styling
-  - Font Awesome for icons
-- Browser Support: Modern browsers with CSS Grid and Flexbox support
-- Responsive breakpoint: 640px (mobile devices)
+## Customization
+- Update schedule data and uniform schedule directly in `script.js`.
+- Adjust styles in `lightmode.css` and `darkmode.css` as needed.
 
-## Time Accuracy
-
-The application's time accuracy depends on:
-- Device system clock synchronization
-- Browser's time handling capabilities
-- Network latency for initial load
+## License
+MIT

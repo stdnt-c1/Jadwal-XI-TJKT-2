@@ -192,3 +192,29 @@ body.dark {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Uniform Schedule Styles */
+.fa-tshirt {
+    color: #9f7aea;
+}
+
+.dark .bg-gray-50 {
+    background-color: #1f2937;
+    transition: background-color 0.3s ease;
+}
+
+.dark .bg-gray-50:hover {
+    background-color: #2d3748 !important;
+}
+
+.dark .bg-gray-200 {
+    background-color: #4a5568;
+}
+
+.text-gray-800 {
+    color: #f7fafc;
+}
+
+.text-gray-600 {
+    color: #e2e8f0;
+}

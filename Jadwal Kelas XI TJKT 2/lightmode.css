@@ -48,6 +48,32 @@ body {
   background-color: #eef2ff;
 }
 
+/* Uniform Schedule Styles */
+.fa-tshirt {
+    color: #7c3aed;
+}
+
+.bg-gray-50 {
+    background-color: #f9fafb;
+    transition: background-color 0.3s ease;
+}
+
+.bg-gray-50:hover {
+    background-color: #f3f4f6 !important;
+}
+
+.bg-gray-200 {
+    background-color: #e5e7eb;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
 @media (max-width: 640px) {
   .schedule-header {
     font-size: 1.25rem;
