@@ -1,0 +1,68 @@
+TJKT 2
+
+1. Senin
+Seragam: Atasan Putih, Bawahan Abu-abu.
+Jadwal pelajaran:
+<07:15      = Bersiap Masuk Sekolah!
+07:15-07:55 = Upacara Bendera
+07:55-09:55 = Pendidikan Agama Islam [Guru: Aminah Tajudin, S.Pd.I]
+09:55-10.10 = Istirahat
+10:10-12:50 = Keamanan Jaringan [Guru: Nugraha Saputra, S.Kom]
+12:50-...   = Lanjut Besok -->
+
+2. Selasa
+Seragam: Atasan Icon/Hitam, Bawahan Cream
+Jadwal pelajaran:
+<07:15      = Bersiap Masuk Sekolah!
+07:00-07:15 = Pembinaan Karakter
+07:15-09:15 = B. Indonesia [Guru: M. Agus Kastiyawan, S.Pd., MPd]
+09:15-09:55 = PKK [Guru: Hj. Darnilawati, S.Kom., M.Sos]
+09:55-10:10 = Istirahat
+10:10-12:50 = PKK [Guru: Hj. Darnilawati, S.Kom., M.Sos]
+12:50-...   = Lanjut Besok -->
+
+3. Rabu
+Seragam: Atasan Jurusan, Bawahan Hitam
+Jadwal pelajaran:
+<07:15      = Bersiap Masuk Sekolah!
+07:00-07:15 = Pembinaan Karakter
+07:15-09:55 = Mata Pelajaran Pilihan
+09:55-10:10 = Istirahat
+10:10-12:50 = ASJ [Guru: Rama Saputra, S.Kom]
+12:50-...   = Lanjut Besok -->
+
+4. Kamis
+Seragam: Atasan Batik, Bawahan Putih
+Jadwal pelajaran:
+<07:15      = Bersiap Masuk Sekolah!
+07:00-07:15 = Pembinaan Karakter
+07:15-09:55 = PKJ [Guru: Sigit Triyanto, S.Pd]
+09:55-10:10 = Istirahat
+10:10-11:30 = P. Tradisional Kaltim [Guru: Fahri Ansar Potabuga, S.Sos]
+11:30-12:50 = B. Inggris [Guru: Nuh Lenjau, M.Pd]
+12:50-...   = Lanjut Besok -->
+
+5. Jum'at
+Seragam: Seragam Pramuka
+Jadwal pelajaran:
+<07:15      = Bersiap Masuk Sekolah!
+07:00-07:15 = Pembinaan Karakter
+07:15-08:25 = Pendidikan Pancasila [Guru: Juanda, S.Pd]
+08:25-09:35 = TJKN [Guru: Abdul Haris, S.Kom]
+09:35-09:50 = Istirahat
+09:50-11:35 = TJKN [Guru: Abdul Haris, S.Kom]
+11:35-13:00 = Pendidikan Agama non-Islam
+13:00-...   = Lanjut Besok -->
+
+6. Sabtu
+Seragam: Atasan P5/Biru, Bawahan Hitam
+Jadwal pelajaran:
+<07:15      = Bersiap Masuk Sekolah!
+07:15-09:45 = P2J [Guru: Sigit Triyanto, S.Pd]
+09:45-10:05 = Istirahat
+10:05-11:05 = B. Inggris [Guru: Nuh Lenjau, M.Pd]
+11:05-12:35 = Matematika [Guru: Misbah, S.Pd]
+12.35-...   = Lanjut Besok -->
+
+7. Minggu
+Libur!

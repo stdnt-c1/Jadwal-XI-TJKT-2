@@ -3,192 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JADWAL KELAS XI TJKT 2</title>
+  <title>JADWAL KELAS XII TJKT 2</title>
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="lightmode.css">
-  <link rel="stylesheet" href="darkmode.css">
 </head>
-<body class="min-h-screen">  <!-- Header Section -->
-  <header class="gradient-bg text-white py-6 px-4">
-    <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between relative">
-      <div class="order-1 sm:order-2 w-full sm:w-auto flex justify-end absolute sm:static top-0 right-0">
-        <button id="theme-toggle" class="p-2 rounded-full hover:bg-white/10 transition-all m-2">
-          <i class="fas fa-moon text-white text-xl"></i>
-        </button>
-      </div>
-      <div class="order-2 sm:order-1 w-full sm:w-auto flex-1 flex justify-center sm:justify-center">
-        <h1 class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-center px-4 mt-12 sm:mt-0 text-white transition-all duration-200">
-          JADWAL KELAS XI TJKT 2
-        </h1>
-      </div>
+<body class="min-h-screen bg-white text-gray-900">
+  <!-- Header Section -->
+  <header class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-8 px-4">
+    <div class="container mx-auto text-center">
+      <h1 class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+        JADWAL KELAS XII TJKT 2
+      </h1>
+      <p class="text-sm mt-2 text-indigo-100">SMKN 7 Samarinda</p>
     </div>
   </header>
 
-  <!-- Current Time Display -->
-  <div class="bg-white py-4 shadow-sm">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-sm">Waktu Sekarang (WITA)</p>
-        <p id="current-time" class="current-time text-4xl md:text-5xl font-bold text-gray-800"></p>
-        <p id="current-date" class="text-gray-600"></p>
-      </div>
-    </div>
-  </div>
-
-  <main class="container mx-auto px-4 py-8">
-    <!-- Current Class Section -->
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-        <i class="fas fa-chalkboard-teacher mr-2 text-indigo-600"></i> Pelajaran Saat Ini
-      </h3>
-      <div id="current-class" class="current-class bg-white rounded-xl p-6 border-l-4 border-indigo-600">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h4 class="text-2xl font-bold text-gray-800" id="current-subject">Mencari pelajaran...</h4>
-            <div class="flex items-center mt-2">
-              <i class="fas fa-clock text-gray-500 mr-2"></i>
-              <span id="current-time-range" class="text-gray-600">-</span>
-            </div>
-            <div class="flex items-center mt-2">
-              <i class="fas fa-user-tie text-gray-500 mr-2"></i>
-              <span id="current-teacher" class="text-gray-600">-</span>
-            </div>
-          </div>
-          <div class="mt-4 md:mt-0">
-            <div class="text-right">
-              <p class="text-sm text-gray-500">Sisa Waktu</p>
-              <p id="time-left" class="text-2xl font-bold text-indigo-600">-</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="progress-bar">
-            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Next Class Section -->
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-        <i class="fas fa-forward mr-2 text-emerald-600"></i> Pelajaran Berikutnya
-      </h3>
-      <div id="next-class" class="next-class bg-white rounded-xl p-6 border-l-4 border-emerald-500">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h4 class="text-xl font-bold text-gray-800" id="next-subject">Mencari pelajaran berikutnya...</h4>
-            <div class="flex items-center mt-2">
-              <i class="fas fa-clock text-gray-500 mr-2"></i>
-              <span id="next-time-range" class="text-gray-600">-</span>
-            </div>
-            <div class="flex items-center mt-2">
-              <i class="fas fa-user-tie text-gray-500 mr-2"></i>
-              <span id="next-teacher" class="text-gray-600">-</span>
-            </div>
-          </div>
-          <div class="mt-4 md:mt-0">
-            <div class="text-right">
-              <p class="text-sm text-gray-500">Dimulai dalam</p>
-              <p id="next-in" class="text-xl font-bold text-emerald-600">-</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>    <!-- Assignments Section -->
-    <div class="mb-12"> <!-- Increased from mb-8 to mb-12 for more space -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-        <h3 class="text-xl font-semibold text-gray-800 flex items-center">
-          <i class="fas fa-book mr-2 text-yellow-600"></i> Tugas
-        </h3>
-        <button id="add-assignment" class="inline-flex items-center px-3 py-1.5 text-sm bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors shadow-sm hover:shadow-yellow-500/25">
-          <i class="fas fa-plus mr-1.5"></i>Tambah Tugas
-        </button>
-      </div>
-      <!-- Assignment Form Modal -->
-      <div id="assignment-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center">
-        <div class="bg-white rounded-xl p-6 max-w-lg w-full mx-4 shadow-xl">
-          <h4 class="text-xl font-semibold mb-4 text-gray-800">Tambah Tugas Baru</h4>
-          <form id="assignment-form" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Mata Pelajaran*</label>
-              <input type="text" id="assignment-subject" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Detail Tugas*</label>
-              <textarea id="assignment-details" required rows="3" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900"></textarea>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Diberikan</label>
-                <input type="date" id="assignment-assigned-date" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Batas Waktu</label>
-                <input type="date" id="assignment-due-date" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900">
-              </div>
-            </div>
-            <div class="flex justify-end space-x-3 mt-6">
-              <button type="button" id="cancel-assignment" class="px-4 py-2 border rounded-lg hover:bg-gray-50 text-gray-700">Batal</button>
-              <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Simpan</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!-- Assignments Table -->
-      <div class="bg-white rounded-xl p-4 sm:p-6 overflow-x-auto shadow-lg shadow-gray-200/50 transition-all duration-200">
-        <div class="overflow-x-auto -mx-4 sm:mx-0">
-          <table class="min-w-full divide-y divide-gray-200 transition-colors duration-200">
-            <thead>
-              <tr>
-                <th class="text-left py-3 px-4 text-gray-600 text-sm">#</th>
-                <th class="text-left py-3 px-4 text-gray-600">Mata Pelajaran</th>
-                <th class="text-left py-3 px-4 text-gray-600">Detail</th>
-                <th class="text-left py-3 px-4 text-gray-600">Tgl. Diberikan</th>
-                <th class="text-left py-3 px-4 text-gray-600">Batas Waktu</th>
-                <th class="text-left py-3 px-4 text-gray-600">Status</th>
-                <th class="text-left py-3 px-4 text-gray-600">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="assignments-table-body">
-              <!-- Assignments will be loaded here -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <script>
-      // Dynamic input/textarea color for dark mode
-      function updateAssignmentInputColors() {
-        const isDark = document.body.classList.contains('dark');
-        const subject = document.getElementById('assignment-subject');
-        const details = document.getElementById('assignment-details');
-        const assigned = document.getElementById('assignment-assigned-date');
-        const due = document.getElementById('assignment-due-date');
-        [subject, details, assigned, due].forEach(el => {
-          if (!el) return;
-          el.style.color = isDark ? '#f3f4f6' : '#111827'; // Tailwind's gray-100 or gray-900
-          el.style.backgroundColor = isDark ? '#374151' : '#fff'; // gray-700 or white
-          el.style.caretColor = isDark ? '#facc15' : '#f59e42'; // yellow-400 or yellow-500
-        });
-      }
-      document.getElementById('theme-toggle').addEventListener('click', function() {
-        setTimeout(updateAssignmentInputColors, 100);
-      });
-      document.getElementById('add-assignment').addEventListener('click', function() {
-        setTimeout(updateAssignmentInputColors, 100);
-      });
-      document.addEventListener('DOMContentLoaded', function() {
-        updateAssignmentInputColors();
-      });
-    </script>
-
-    <!-- Weekly Schedule Section -->
+  <main class="container mx-auto px-4 py-8"><!-- Weekly Schedule Section -->
     <div>
       <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
         <i class="far fa-calendar-alt mr-2 text-blue-600"></i> Jadwal Mingguan
@@ -200,7 +34,9 @@
         <button class="day-btn px-4 py-2 rounded-lg mr-2 bg-gray-100 text-gray-700 font-medium" data-day="1">Selasa</button>
         <button class="day-btn px-4 py-2 rounded-lg mr-2 bg-gray-100 text-gray-700 font-medium" data-day="2">Rabu</button>
         <button class="day-btn px-4 py-2 rounded-lg mr-2 bg-gray-100 text-gray-700 font-medium" data-day="3">Kamis</button>
-        <button class="day-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium" data-day="4">Jumat</button>
+        <button class="day-btn px-4 py-2 rounded-lg mr-2 bg-gray-100 text-gray-700 font-medium" data-day="4">Jumat</button>
+        <button class="day-btn px-4 py-2 rounded-lg mr-2 bg-gray-100 text-gray-700 font-medium" data-day="5">Sabtu</button>
+        <button class="day-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium" data-day="6">Minggu</button>
       </div>
       
       <!-- Schedule Content -->
@@ -225,28 +61,28 @@
               <span class="text-lg font-semibold text-gray-800">Senin</span>
               <div class="h-px flex-1 mx-3 bg-gray-200"></div>
             </div>
-            <p class="mt-2 text-gray-600">Seragam Putih &ndash; Abu-abu, Almamater</p>
+            <p class="mt-2 text-gray-600">Atasan Putih, Bawahan Abu-abu</p>
           </div>
           <div class="p-4 rounded-lg bg-gray-50">
             <div class="flex items-center">
               <span class="text-lg font-semibold text-gray-800">Selasa</span>
               <div class="h-px flex-1 mx-3 bg-gray-200"></div>
             </div>
-            <p class="mt-2 text-gray-600">Seragam Icon (Kemeja Hitam, Celana Cream)</p>
+            <p class="mt-2 text-gray-600">Atasan Icon/Hitam, Bawahan Cream</p>
           </div>
           <div class="p-4 rounded-lg bg-gray-50">
             <div class="flex items-center">
               <span class="text-lg font-semibold text-gray-800">Rabu</span>
               <div class="h-px flex-1 mx-3 bg-gray-200"></div>
             </div>
-            <p class="mt-2 text-gray-600">Seragam Jurusan (Kemeja Biru, Celana Hitam)</p>
+            <p class="mt-2 text-gray-600">Atasan Jurusan, Bawahan Hitam</p>
           </div>
           <div class="p-4 rounded-lg bg-gray-50">
             <div class="flex items-center">
               <span class="text-lg font-semibold text-gray-800">Kamis</span>
               <div class="h-px flex-1 mx-3 bg-gray-200"></div>
             </div>
-            <p class="mt-2 text-gray-600">Seragam Batik (Kemaja Batik-Hitam, Celana Putih)</p>
+            <p class="mt-2 text-gray-600">Atasan Batik, Bawahan Putih</p>
           </div>
           <div class="p-4 rounded-lg bg-gray-50">
             <div class="flex items-center">
@@ -254,6 +90,13 @@
               <div class="h-px flex-1 mx-3 bg-gray-200"></div>
             </div>
             <p class="mt-2 text-gray-600">Seragam Pramuka</p>
+          </div>
+          <div class="p-4 rounded-lg bg-gray-50">
+            <div class="flex items-center">
+              <span class="text-lg font-semibold text-gray-800">Minggu</span>
+              <div class="h-px flex-1 mx-3 bg-gray-200"></div>
+            </div>
+            <p class="mt-2 text-gray-600">Atasan P5/Biru, Bawahan Hitam</p>
           </div>
         </div>
       </div>
@@ -263,10 +106,8 @@
   <!-- Footer Section -->
   <footer class="bg-gray-50 py-6 mt-8">
     <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-      <p>© 2025 Jadwal Kelas Digital XI TJKT 2 | SMKN 7 Samarinda</p>
-      <p class="mt-1">Waktu mengikuti WITA (UTC+8/GMT+8)</p>
-      <p class="mt-1">Zona Waktu: Asia/Makassar, Indonesia</p>
-      <p class="mt-1 text-xs">*Akurasi waktu bergantung pada sinkronisasi waktu perangkat Anda</p>
+      <p>© 2025 Jadwal Kelas Digital XII TJKT 2 | SMKN 7 Samarinda</p>
+      <p class="mt-1">*Jadwal ini bersifat statis untuk informasi umum</p>
     </div>
   </footer>
 

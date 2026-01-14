@@ -4,26 +4,15 @@
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "Jadwal Kelas XI TJKT 2/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/assignments",
-      "methods": ["GET", "POST"],
-      "dest": "server.js"
-    },
-    {
-      "src": "/assignments/(.*)",
-      "methods": ["GET", "PUT", "DELETE"],
-      "dest": "server.js"
-    },
-    {
       "src": "/(.*)",
-      "dest": "Jadwal Kelas XI TJKT 2/$1"
+      "dest": "server.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
